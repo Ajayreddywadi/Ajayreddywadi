@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriGuide - Smart Farming Assistant</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjNENBRjUwIi8+CjxwYXRoIGQ9Ik05NiA0OEM4MC41MzYgNDggNjggNjAuNTM2IDY4IDc2Vjg0QzY4IDk5LjQ2NCA4MC41MzYgMTEyIDk2IDExMlMxMjQgOTkuNDY0IDEyNCA4NFY3NkMxMjQgNjAuNTM2IDExMS40NjQgNDggOTYgNDhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYgMTEyQzgwLjUzNiAxMTIgNjggMTI0LjUzNiA2OCAxNDBWMTQ4QzY4IDE2My40NjQgODAuNTM2IDE3NiA5NiAxNzZTMTI0IDE2My40NjQgMTI0IDE0OFYxNDBDMTI0IDEyNC41MzYgMTExLjQ2NCAxMTIgOTYgMTEyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --accent-color: #FFC107;
+            --text-color: #333;
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-theme {
+            --text-color: #e0e0e0;
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+
+        /* Weather Card */
+        .weather-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .weather-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .weather-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* Crop Suggestions */
+        .crop-seasons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .season {
+            background: rgba(255, 193, 7, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .season h4 {
+            color: #FF8F00;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .crop-list {
+            list-style: none;
+        }
+
+        .crop-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .crop-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Temperature Tips */
+        .temp-tips {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .temp-range {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .temp-range h4 {
+            color: #1976D2;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: none;
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        .install-prompt.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .install-buttons {
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+        }
+
+        .install-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .install-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🌾</div>
+                    <span>AgriGuide</span>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Smart Farming Made Simple</h1>
+                <p>Get real-time weather updates, temperature-based crop advice, and seasonal growing recommendations to maximize your harvest.</p>
+            </section>
+
+            <div class="cards-grid">
+                <!-- Weather Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🌤️</div>
+                        <h3>Live Weather</h3>
+                    </div>
+                    <div id="weather-content">
+                        <button class="btn" onclick="getWeather()">
+                            <span id="weather-btn-text">Get Weather</span>
+                            <span id="weather-loading" class="loading" style="display: none;"></span>
+                        </button>
+                    </div>
+                    <div class="weather-info" id="weather-info" style="display: none;">
+                        <div class="weather-item">
+                            <div class="weather-value" id="temperature">--°C</div>
+                            <div class="weather-label">Temperature</div>
+                        </div>
+                        <div class="weather-item">
+                            <div class="weather-value" id="humidity">--%</div>
+                            <div class="weather-label">Humidity</div>
+                        </div>
+                        <div class="weather-item">
+                            <div class="weather-value" id="condition">--</div>
+                            <div class="weather-label">Condition</div>
+                        </div>
+                        <div class="weather-item">
+                            <div class="weather-value" id="location">--</div>
+                            <div class="weather-label">Location</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temperature Tips Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🌡️</div>
+                        <h3>Temperature Guide</h3>
+                    </div>
+                    <div class="temp-tips">
+                        <div class="temp-range">
+                            <h4>Cold Weather (0-15°C)</h4>
+                            <p>Protect crops with row covers, use mulch to insulate soil, consider cold-hardy varieties like kale, spinach, and winter wheat.</p>
+                        </div>
+                        <div class="temp-range">
+                            <h4>Moderate Weather (15-25°C)</h4>
+                            <p>Ideal for most crops. Maintain consistent watering, monitor for pests, perfect time for transplanting seedlings.</p>
+                        </div>
+                        <div class="temp-range">
+                            <h4>Hot Weather (25°C+)</h4>
+                            <p>Increase watering frequency, provide shade for sensitive crops, harvest early morning, plant heat-tolerant varieties.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seasonal Crops Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🗓️</div>
+                        <h3>Seasonal Crops</h3>
+                    </div>
+                    <div class="crop-seasons">
+                        <div class="season">
+                            <h4>🌸 Spring</h4>
+                            <ul class="crop-list">
+                                <li>🥬 Lettuce & Leafy Greens</li>
+                                <li>🥕 Carrots</li>
+                                <li>🧅 Onions</li>
+                                <li>🥔 Potatoes</li>
+                                <li>🌽 Corn (late spring)</li>
+                            </ul>
+                        </div>
+                        <div class="season">
+                            <h4>☀️ Summer</h4>
+                            <ul class="crop-list">
+                                <li>🍅 Tomatoes</li>
+                                <li>🥒 Cucumbers</li>
+                                <li>🌶️ Peppers</li>
+                                <li>🍆 Eggplant</li>
+                                <li>🎃 Squash</li>
+                            </ul>
+                        </div>
+                        <div class="season">
+                            <h4>🍂 Fall</h4>
+                            <ul class="crop-list">
+                                <li>🥬 Kale & Cabbage</li>
+                                <li>🥕 Root Vegetables</li>
+                                <li>🧄 Garlic</li>
+                                <li>🌾 Winter Wheat</li>
+                                <li>🥦 Broccoli</li>
+                            </ul>
+                        </div>
+                        <div class="season">
+                            <h4>❄️ Winter</h4>
+                            <ul class="crop-list">
+                                <li>🥬 Spinach (greenhouse)</li>
+                                <li>🌿 Herbs (indoor)</li>
+                                <li>🌱 Microgreens</li>
+                                <li>🥗 Winter Lettuce</li>
+                                <li>🧅 Green Onions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">💬</div>
+                        <h3>Contact Us</h3>
+                    </div>
+                    <form class="contact-form" onsubmit="submitForm(event)">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Ask us about crops, weather, or farming tips..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn" id="submit-btn">
+                            <span id="submit-text">Send Message</span>
+                            <span id="submit-loading" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AgriGuide. Empowering farmers with smart technology. 🌱</p>
+        </div>
+    </footer>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <h4>📱 Install AgriGuide</h4>
+        <p>Get instant access to weather and crop data on your device!</p>
+        <div class="install-buttons">
+            <button class="install-btn" onclick="installApp()">Install</button>
+            <button class="install-btn" onclick="dismissInstall()">Later</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        let isDark = false;
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark-theme', isDark);
+            
+            if (isDark) {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            }
+            
+            // Save preference
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem('darkMode', isDark);
+            }
+        }
+
+        // Load saved theme preference
+        if (typeof(Storage) !== "undefined") {
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'true') {
+                toggleTheme();
+            }
+        }
+
+        // Weather Functionality
+        let weatherData = null;
+
+        async function getWeather() {
+            const btn = document.getElementById('weather-btn-text');
+            const loading = document.getElementById('weather-loading');
+            const weatherInfo = document.getElementById('weather-info');
+            
+            btn.style.display = 'none';
+            loading.style.display = 'inline-block';
+            
+            try {
+                // Get user location
+                const position = await getCurrentPosition();
+                const { latitude, longitude } = position.coords;
+                
+                // Use a free weather API (OpenWeatherMap)
+                const API_KEY = 'demo'; // Users need to replace with actual API key
+                const response = await fetch(https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric);
+                
+                if (!response.ok) {
+                    throw new Error('Weather service unavailable');
+                }
+                
+                const data = await response.json();
+                weatherData = data;
+                
+                // Update UI with real data
+                document.getElementById('temperature').textContent = ${Math.round(data.main.temp)}°C;
+                document.getElementById('humidity').textContent = ${data.main.humidity}%;
+                document.getElementById('condition').textContent = data.weather[0].main;
+                document.getElementById('location').textContent = data.name;
+                
+                weatherInfo.style.display = 'grid';
+                
+            } catch (error) {
+                console.error('Weather error:', error);
+                
+                // Show demo data when API is unavailable
+                document.getElementById('temperature').textContent = '22°C';
+                document.getElementById('humidity').textContent = '65%';
+                document.getElementById('condition').textContent = 'Sunny';
+                document.getElementById('location').textContent = 'Your Location';
+                
+                weatherInfo.style.display = 'grid';
+                
+                // Show a subtle message about demo data
+                setTimeout(() => {
+                    alert('Demo weather data shown. For live data, please add your OpenWeatherMap API key.');
+                }, 500);
+            }
+            
+            btn.style.display = 'inline';
+            loading.style.display = 'none';
+            btn.textContent = 'Refresh Weather';
+        }
+
+        function getCurrentPosition() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject(new Error('Geolocation not supported'));
+                    return;
+                }
+                
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    timeout: 10000,
+                    enableHighAccuracy: true
+                });
+            });
+        }
+
+        // Contact Form
+       function submitForm(event) {
+    event.preventDefault();
+
+    const submitText = document.getElementById('submit-text');
+    const submitLoading = document.getElementById('submit-loading');
+    const submitBtn = document.getElementById('submit-btn');
+
+    submitText.style.display = 'none';
+    submitLoading.style.display = 'inline-block';
+    submitBtn.disabled = true;
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwFkEqbF6P8eD9JyaTJrQR2e8baa9G0JTVXLuJ5_J-kfjPDNoHay0No5mJ5IlaHqCAX/exec'; // Replace with your actual URL
+
+    const formData = new URLSearchParams();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('message', message);
+
+    fetch(scriptURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Thank you for your message! We\'ll get back to you soon. 🌱');
+        document.querySelector('.contact-form').reset();
+    })
+    .catch(error => {
+        alert('Error submitting message. Please try again later.');
+        console.error('Error!', error.message);
+    })
+    .finally(() => {
+        submitText.style.display = 'inline';
+        submitLoading.style.display = 'none';
+        submitBtn.disabled = false;
+        submitText.textContent = 'Send Message';
+    });
+}
+
+        }
+
+        // PWA Installation
+        let deferredPrompt;
+        let installShown = false;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install prompt after a delay
+            if (!installShown) {
+                setTimeout(showInstallPrompt, 10000);
+            }
+        });
+
+        function showInstallPrompt() {
+            if (typeof(Storage) !== "undefined" && localStorage.getItem('installDismissed')) {
+                return;
+            }
+            
+            const prompt = document.getElementById('installPrompt');
+            prompt.classList.add('show');
+            installShown = true;
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                    dismissInstall();
+                });
+            } else {
+                alert('Installation not available on this device/browser.');
+                dismissInstall();
+            }
+        }
+
+        function dismissInstall() {
+            document.getElementById('installPrompt').classList.remove('show');
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem('installDismissed', 'true');
+            }
+        }
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Auto-update current season highlighting
+        function highlightCurrentSeason() {
+            const now = new Date();
+            const month = now.getMonth();
+            let currentSeason;
+            
+            if (month >= 2 && month <= 4) currentSeason = 0; // Spring
+            else if (month >= 5 && month <= 7) currentSeason = 1; // Summer
+            else if (month >= 8 && month <= 10) currentSeason = 2; // Fall
+            else currentSeason = 3; // Winter
+            
+            const seasons = document.querySelectorAll('.season');
+            seasons[currentSeason].style.border = '2px solid var(--primary-color)';
+            seasons[currentSeason].style.background = 'rgba(76, 175, 80, 0.1)';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            highlightCurrentSeason();
+            
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+
+        // Add some interactive touches
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Auto-refresh weather every 30 minutes if already loaded
+        setInterval(() => {
+            if (weatherData && document.getElementById('weather-info').style.display !== 'none') {
+                getWeather();
+            }
+        }, 1800000); // 30 minutes
+    </script>
+</body>
+</html> 
